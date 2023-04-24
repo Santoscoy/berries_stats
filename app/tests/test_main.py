@@ -1,6 +1,7 @@
-from main import app
 from unittest.mock import patch
 from fastapi.testclient import TestClient
+
+from app.main import app
 
 
 client = TestClient(app)
@@ -11,8 +12,8 @@ def test_read_main():
     assert response.status_code == 200
 
 
-@patch("utils.get_berries_data")
-@patch("utils.get_growth_times")
+@patch("app.utils.get_berries_data")
+@patch("app.utils.get_growth_times")
 def test_get_berries_stats(mock_get_growth_times, mock_get_berries_names):
     mock_get_berries_names.return_value = {
         "Berry_A": "https://pokeapi.co/api/v2/berry/1/",
@@ -40,7 +41,7 @@ def test_get_berries_stats(mock_get_growth_times, mock_get_berries_names):
         assert val == expected_response[key]
 
 
-@patch("utils.generate_histogram")
+@patch("app.utils.generate_histogram")
 def test_get_frequency_histogram(mock_get_growth_times):
     mock_get_growth_times.return_value = "plain_html"
 
