@@ -8,9 +8,7 @@ from tests.fig_base64 import fig_base64
 
 
 @pytest.mark.parametrize(
-    "url, expected_result", [
-        ("https://api.test.com", {"key": "value"})
-    ]
+    "url, expected_result", [("https://api.test.com", {"key": "value"})]
 )
 def test_get_content(url, expected_result):
     with patch("utils.requests.get") as mock_get:
@@ -27,26 +25,11 @@ def test_get_berries_data(mock_get_berries_count, mock_get_content):
     mock_get_berries_count.return_value = 5
     mock_get_content.return_value = {
         "results": [
-            {
-                "name": "test1",
-                "url": "https://api/1/"
-            },
-            {
-                "name": "test2",
-                "url": "https://api/2/"
-            },
-            {
-                "name": "test3",
-                "url": "https://api/3/"
-            },
-            {
-                "name": "test4",
-                "url": "https://api/4/"
-            },
-            {
-                "name": "test5",
-                "url": "https://api/5/"
-            },
+            {"name": "test1", "url": "https://api/1/"},
+            {"name": "test2", "url": "https://api/2/"},
+            {"name": "test3", "url": "https://api/3/"},
+            {"name": "test4", "url": "https://api/4/"},
+            {"name": "test5", "url": "https://api/5/"},
         ]
     }
     expected_result = {
@@ -67,7 +50,7 @@ def test_get_count(mock_get_content):
 
 
 def test_get_growth_times():
-    urls = ["https://api/1/", "https://api/2/", "https://api/3/" ]
+    urls = ["https://api/1/", "https://api/2/", "https://api/3/"]
     contents = [
         {"growth_time": 10},
         {"growth_time": 12},
@@ -106,18 +89,25 @@ class UtilsTest(TestCase):
 
     def test_get_growth_time_frequencies(self):
         expected_result = Counter({1: 1, 2: 1, 3: 1, 4: 1, 5: 1})
-        assert utils.get_growth_time_frequencies(self.growth_time_list) == expected_result
+        assert (
+            utils.get_growth_time_frequencies(self.growth_time_list) == expected_result
+        )
 
     def test_generate_histogram(self):
-        with patch('utils.get_growth_times', return_value=self.growth_time_list):
+        with patch("utils.get_growth_times", return_value=self.growth_time_list):
             result = utils.generate_histogram()
 
-            expected_html = f'<html><head><title>Histogram</title></head><body>' \
-                            f'<img src="data:image/png;base64,{fig_base64}"></body></html>'
+            expected_html = (
+                f"<html><head><title>Histogram</title></head><body>"
+                f'<img src="data:image/png;base64,{fig_base64}"></body></html>'
+            )
 
             assert result.strip() == expected_html
 
     def test_generate_html(self):
         string = "test"
-        assert utils.generate_html(string) == '<html><head><title>Histogram</title></head><body>' \
-                                              '<img src="data:image/png;base64,test"></body></html>'
+        assert (
+            utils.generate_html(string)
+            == "<html><head><title>Histogram</title></head><body>"
+            '<img src="data:image/png;base64,test"></body></html>'
+        )

@@ -1,5 +1,6 @@
 """
-This file is intended to store a base64-formatted string representing a histogram created by matplotlib,
+This file is intended to store a base64-formatted string representing a
+histogram created by matplotlib,
 which is used to test the generate_histogram function in the utils.py file.
 """
 

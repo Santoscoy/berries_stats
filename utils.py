@@ -9,7 +9,7 @@ from collections import Counter
 
 def get_content(url):
     response = requests.get(url)
-    return json.loads(response.content.decode('utf-8'))
+    return json.loads(response.content.decode("utf-8"))
 
 
 def get_berries_data():
@@ -78,5 +78,7 @@ def generate_histogram():
 
 
 def generate_html(fig_base64):
-    return f'<html><head><title>Histogram</title></head><body>' \
-           f'<img src="data:image/png;base64,{fig_base64}"></body></html>'
+    return (
+        f"<html><head><title>Histogram</title></head><body>"
+        f'<img src="data:image/png;base64,{fig_base64}"></body></html>'
+    )
