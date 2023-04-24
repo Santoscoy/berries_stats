@@ -12,20 +12,22 @@ def get_content(url):
     return json.loads(response.content.decode('utf-8'))
 
 
-def get_berrie_url(name):
-    return f"https://pokeapi.co/api/v2/berry/{name}"
+def get_berries_data():
+    count = get_berries_count()
+    url = f"https://pokeapi.co/api/v2/berry?offset=0&limit={count}"
+    content = get_content(url)
+    return {item["name"]: item["url"] for item in content["results"]}
 
 
-def get_berries_names():
+def get_berries_count():
     url = "https://pokeapi.co/api/v2/berry"
     content = get_content(url)
-    return [item["name"] for item in content["results"]]
+    return content["count"]
 
 
-def get_growth_times(names_list):
+def get_growth_times(urls):
     growth_time_list = []
-    for name in names_list:
-        url = get_berrie_url(name)
+    for url in urls:
         content = get_content(url)
         growth_time_list.append(content["growth_time"])
 
@@ -57,7 +59,7 @@ def get_growth_time_frequencies(growth_time_list):
 
 
 def generate_histogram():
-    n_list = get_growth_times(get_berries_names())
+    n_list = get_growth_times(get_berries_data().values())
 
     intervals = range(min(n_list), max(n_list) + 2)
     plot.hist(x=n_list, bins=intervals, color="#F2AB6D", rwidth=0.85)
@@ -76,13 +78,5 @@ def generate_histogram():
 
 
 def generate_html(fig_base64):
-    return f"""
-    <html>
-        <head>
-            <title>Histogram</title>
-        </head>
-        <body>
-            <img src="data:image/png;base64,{fig_base64}">
-        </body>
-    </html>
-    """
+    return f'<html><head><title>Histogram</title></head><body>' \
+           f'<img src="data:image/png;base64,{fig_base64}"></body></html>'

@@ -13,11 +13,11 @@ def root():
 
 @app.get("/allBerryStats")
 def get_berries_stats():
-    names_list = utils.get_berries_names()
-    growth_time_list = utils.get_growth_times(names_list)
+    berries_dict = utils.get_berries_data()
+    growth_time_list = utils.get_growth_times(berries_dict.values())
 
     return {
-        "berries_names": names_list,
+        "berries_names": list(berries_dict.keys()),
         "min_growth_time": utils.get_min_growth_time(growth_time_list),
         "median_growth_time": utils.get_median_growth_time(growth_time_list),
         "max_growth_time": utils.get_max_growth_time(growth_time_list),
