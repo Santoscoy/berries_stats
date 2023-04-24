@@ -1,7 +1,9 @@
-import utils
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from starlette.responses import RedirectResponse
+
+from app import utils
+
 
 app = FastAPI()
 

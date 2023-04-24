@@ -1,17 +1,18 @@
-import utils
 import pytest
 import json
 from unittest.mock import patch
 from unittest import TestCase
 from collections import Counter
-from tests.fig_base64 import fig_base64
+
+from app import utils
+from app.tests.fig_base64 import fig_base64
 
 
 @pytest.mark.parametrize(
     "url, expected_result", [("https://api.test.com", {"key": "value"})]
 )
 def test_get_content(url, expected_result):
-    with patch("utils.requests.get") as mock_get:
+    with patch("app.utils.requests.get") as mock_get:
         mock_response = expected_result
         mock_get.return_value.content.decode.return_value = json.dumps(mock_response)
         content = utils.get_content(url)
@@ -19,8 +20,8 @@ def test_get_content(url, expected_result):
         assert content == expected_result
 
 
-@patch("utils.get_content")
-@patch("utils.get_berries_count")
+@patch("app.utils.get_content")
+@patch("app.utils.get_berries_count")
 def test_get_berries_data(mock_get_berries_count, mock_get_content):
     mock_get_berries_count.return_value = 5
     mock_get_content.return_value = {
@@ -42,7 +43,7 @@ def test_get_berries_data(mock_get_berries_count, mock_get_content):
     assert utils.get_berries_data() == expected_result
 
 
-@patch("utils.get_content")
+@patch("app.utils.get_content")
 def test_get_count(mock_get_content):
     mock_get_content.return_value = {"count": 10}
     count = utils.get_berries_count()
@@ -61,7 +62,7 @@ def test_get_growth_times():
         index = urls.index(url)
         return contents[index]
 
-    with patch("utils.get_content", side_effect=mock_get_content):
+    with patch("app.utils.get_content", side_effect=mock_get_content):
         grow_time_list = utils.get_growth_times(urls)
 
         expected_result = [10, 12, 14]
@@ -94,7 +95,7 @@ class UtilsTest(TestCase):
         )
 
     def test_generate_histogram(self):
-        with patch("utils.get_growth_times", return_value=self.growth_time_list):
+        with patch("app.utils.get_growth_times", return_value=self.growth_time_list):
             result = utils.generate_histogram()
 
             expected_html = (
