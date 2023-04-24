@@ -7,12 +7,12 @@ app = FastAPI()
 
 
 @app.get("/")
-def root():
+async def root():
     return RedirectResponse(url="/docs/")
 
 
 @app.get("/allBerryStats")
-def get_berries_stats():
+async def get_berries_stats():
     berries_dict = utils.get_berries_data()
     growth_time_list = utils.get_growth_times(berries_dict.values())
 
@@ -28,5 +28,5 @@ def get_berries_stats():
 
 
 @app.get("/histogram", response_class=HTMLResponse)
-def get_frequency_histogram():
+async def get_frequency_histogram():
     return utils.generate_histogram()
