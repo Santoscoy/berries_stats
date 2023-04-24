@@ -12,6 +12,7 @@ from app.tests.fig_base64 import fig_base64
     "url, expected_result", [("https://api.test.com", {"key": "value"})]
 )
 def test_get_content(url, expected_result):
+    """Testing the utils.get_content function"""
     with patch("app.utils.requests.get") as mock_get:
         mock_response = expected_result
         mock_get.return_value.content.decode.return_value = json.dumps(mock_response)
@@ -23,6 +24,7 @@ def test_get_content(url, expected_result):
 @patch("app.utils.get_content")
 @patch("app.utils.get_berries_count")
 def test_get_berries_data(mock_get_berries_count, mock_get_content):
+    """Testing the utils.get_berries_data function"""
     mock_get_berries_count.return_value = 5
     mock_get_content.return_value = {
         "results": [
@@ -45,12 +47,14 @@ def test_get_berries_data(mock_get_berries_count, mock_get_content):
 
 @patch("app.utils.get_content")
 def test_get_count(mock_get_content):
+    """Testing the utils.get_berries_count function"""
     mock_get_content.return_value = {"count": 10}
     count = utils.get_berries_count()
     assert count == 10
 
 
 def test_get_growth_times():
+    """Testing the utils.get_growth_times function"""
     urls = ["https://api/1/", "https://api/2/", "https://api/3/"]
     contents = [
         {"growth_time": 10},
@@ -69,32 +73,40 @@ def test_get_growth_times():
         assert grow_time_list == expected_result
 
 
-class UtilsTest(TestCase):
+class StatsTest(TestCase):
+    """Class to test the stats functions un utils.py"""
     def setUp(self):
         self.growth_time_list = [1, 2, 3, 4, 5]
 
     def test_get_max_growth_time(self):
+        """Testing the utils.get_max_growth_time function"""
         assert utils.get_max_growth_time(self.growth_time_list) == 5
 
     def test_get_median_growth_time(self):
+        """Testing the utils.get_median_growth_time function"""
         assert utils.get_median_growth_time(self.growth_time_list) == 3.0
 
     def test_get_min_growth_time(self):
+        """Testing the utils.get_min_growth_time function"""
         assert utils.get_min_growth_time(self.growth_time_list) == 1
 
     def test_get_variance_growth_time(self):
+        """Testing the utils.get_variance_growth_time function"""
         assert utils.get_variance_growth_time(self.growth_time_list) == 2.5
 
     def test_get_mean_growth_time(self):
+        """Testing the utils.get_mean_growth_time function"""
         assert utils.get_mean_growth_time(self.growth_time_list) == 3
 
     def test_get_growth_time_frequencies(self):
+        """Testing the utils.get_growth_time_frequencies function"""
         expected_result = Counter({1: 1, 2: 1, 3: 1, 4: 1, 5: 1})
         assert (
             utils.get_growth_time_frequencies(self.growth_time_list) == expected_result
         )
 
     def test_generate_histogram(self):
+        """Testing the utils.generate_histogram function"""
         with patch("app.utils.get_growth_times", return_value=self.growth_time_list):
             result = utils.generate_histogram()
 
@@ -106,6 +118,7 @@ class UtilsTest(TestCase):
             assert result.strip() == expected_html
 
     def test_generate_html(self):
+        """Testing the utils.generate_html function"""
         string = "test"
         assert (
             utils.generate_html(string)

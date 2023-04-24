@@ -8,6 +8,7 @@ client = TestClient(app)
 
 
 def test_read_main():
+    """Test for root endpoint"""
     response = client.get("/")
     assert response.status_code == 200
 
@@ -15,6 +16,7 @@ def test_read_main():
 @patch("app.utils.get_berries_data")
 @patch("app.utils.get_growth_times")
 def test_get_berries_stats(mock_get_growth_times, mock_get_berries_names):
+    """Testing /allBerriesStats endpoint"""
     mock_get_berries_names.return_value = {
         "Berry_A": "https://pokeapi.co/api/v2/berry/1/",
         "Berry_B": "https://pokeapi.co/api/v2/berry/2/",
@@ -43,6 +45,7 @@ def test_get_berries_stats(mock_get_growth_times, mock_get_berries_names):
 
 @patch("app.utils.generate_histogram")
 def test_get_frequency_histogram(mock_get_growth_times):
+    """Testing the /histogram endpoint"""
     mock_get_growth_times.return_value = "plain_html"
 
     response = client.get("/histogram")

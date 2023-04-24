@@ -5,18 +5,22 @@ from starlette.responses import RedirectResponse
 from app import utils
 
 
-app = FastAPI()
+app = FastAPI(
+    title="Berries Stats API",
+)
 
 
 @app.get("/")
 async def root():
+    """Endpoint to redirecting main root to docs"""
     return RedirectResponse(url="/docs/")
 
 
 @app.get("/allBerryStats")
 async def get_berries_stats():
+    """Endpoint to get berries statistics"""
     berries_dict = utils.get_berries_data()
-    growth_time_list = utils.get_growth_times(berries_dict.values())
+    growth_time_list = utils.get_growth_times(list(berries_dict.values()))
 
     return {
         "berries_names": list(berries_dict.keys()),
@@ -31,4 +35,5 @@ async def get_berries_stats():
 
 @app.get("/histogram", response_class=HTMLResponse)
 async def get_frequency_histogram():
+    """Endpoint to generate histogram of frequency growth times"""
     return utils.generate_histogram()
